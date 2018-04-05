@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '1.0a2.dev0'
+version = '1.0a1'
 description = 'A behavior for Dexterity-based content types to show previews on hover over hyperlinks in content area.'
 long_description = (
     open('README.rst').read() + '\n' +
