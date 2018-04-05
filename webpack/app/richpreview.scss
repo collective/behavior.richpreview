@@ -1,0 +1,35 @@
+@import 'scss/sprite';
+@import '~tippy.js/dist/themes/light';
+
+
+#viewlet-richpreview {
+  display: none;
+}
+
+.richpreview {
+  position: relative;
+
+  display: flex;
+
+  .richpreview-image {
+    display: flex;
+
+    min-width: 6rem;
+    min-height: 6rem;
+
+    align-items: center;
+    justify-content: center;
+  }
+  .richpreview-image > img {
+    max-width: 6rem;
+    max-height: 6rem;
+  }
+  .richpreview-text {
+    font-weight: bold;
+
+    width: 12rem;
+    margin: 1rem;
+
+    text-align: left;
+  }
+}
