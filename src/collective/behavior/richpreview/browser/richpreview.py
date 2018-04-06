@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from collective.behavior.richpreview.behaviors import IRichPreview
 from collective.behavior.richpreview.interfaces import IRichPreviewSettings
+from collective.behavior.richpreview.logger import logger
 from lxml import etree
 from plone import api
 from plone.app.layout.viewlets.common import ViewletBase
@@ -9,6 +10,7 @@ from zope.publisher.browser import BrowserView
 
 import json
 import requests
+import rsa
 
 
 TIMEOUT = 5
@@ -17,8 +19,20 @@ TIMEOUT = 5
 class RichPreviewJsonView(BrowserView):
     """Helper view to return page metadata in JSON format."""
 
+    url = None
+
     def setup(self):
-        self.url = self.request.get('url', '')
+        url = self.request.get('url', '')
+        privkey = api.portal.get_registry_record(
+            'private_key', interface=IRichPreviewSettings, default='')
+        try:
+            privkey = rsa.PrivateKey.load_pkcs1(privkey)
+            self.url = rsa.decrypt(url, privkey)
+        except rsa.pkcs1.DecryptionError:
+            msg = 'URL decription failed: {0} ({1})'.format(self.context, url)
+            logger.warn(msg)
+        except ValueError:
+            pass
 
     def get_meta_property(self, name):
         meta = self.html.find('*/meta[@property="' + name + '"]')
@@ -53,7 +67,7 @@ class RichPreviewJsonView(BrowserView):
 
     def __call__(self):
         self.setup()
-        if not self.url:
+        if self.url is None:
             self.request.RESPONSE.setStatus(400)
             return ''
 
@@ -70,6 +84,6 @@ class RichPreviewViewlet(ViewletBase):
         if not IRichPreview.providedBy(self.context):
             return False
 
-        record = IRichPreviewSettings.__identifier__ + '.enable'
-        enabled = api.portal.get_registry_record(record)
+        name = IRichPreviewSettings.__identifier__ + '.enable'
+        enabled = api.portal.get_registry_record(name, default=False)
         return api.user.is_anonymous() and enabled

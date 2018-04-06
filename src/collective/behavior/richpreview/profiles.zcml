@@ -11,6 +11,7 @@
       directory="profiles/default"
       description="A behavior for Dexterity-based content types to show previews on hover over hyperlinks in content area."
       provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
       i18n:attributes="title; description"
       />
 
