@@ -4,6 +4,9 @@ Changelog
 1.0a2 (unreleased)
 ------------------
 
+- Use traverse in ajax to extract page information.
+  [rodfersou]
+
 - Use public-key cryptography to protect helper browser view.
   [hvelarde]
 

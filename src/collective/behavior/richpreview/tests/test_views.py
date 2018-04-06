@@ -27,13 +27,14 @@ class RichPreviewJsonViewTestCase(unittest.TestCase):
         return base64.b64encode(value)
 
     def test_view_no_url(self):
+        self.view.publishTraverse(self.request, '')
         response = self.view()
         self.assertEqual(response, '')
         self.assertEqual(self.request.RESPONSE.getStatus(), 400)
 
     def test_view(self):
         url = u'http://www.plone.org'.encode('utf-8')
-        self.request.form['url'] = self._encrypt(url)
+        self.view.publishTraverse(self.request, self._encrypt(url))
 
         expected = {
             'image': 'https://plone.org/logo.png',
