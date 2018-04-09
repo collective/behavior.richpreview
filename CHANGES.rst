@@ -4,7 +4,8 @@ Changelog
 1.0a2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use public-key cryptography to protect helper browser view.
+  [hvelarde]
 
 
 1.0a1 (2018-04-05)
