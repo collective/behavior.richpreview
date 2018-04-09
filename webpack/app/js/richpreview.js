@@ -56,10 +56,7 @@ export default class RichPreview {
     this.loading = true
 
     $.ajax({
-      url: portal_url + '/@@richpreview-json-view',
-      data: {
-        url: $a.attr('data-richpreview')
-      },
+      url: `${portal_url}/@@richpreview-json-view/${$a.attr('data-richpreview')}`,
       context: this
     }).done(function(data) {
       if ($.isEmptyObject(data)) {

@@ -62,7 +62,7 @@ class RichPreviewTransform(object):
             return  # nothing to do
 
         encrypted = self._encript(href)
-        encrypted = base64.b64encode(encrypted)
+        encrypted = base64.urlsafe_b64encode(encrypted)
         element.attrib['data-richpreview'] = encrypted
         logger.debug('href: "{0}"; encrypted: "{1}"'.format(href, encrypted))
 
