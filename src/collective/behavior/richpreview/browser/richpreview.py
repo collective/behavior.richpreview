@@ -8,6 +8,7 @@ from plone.app.layout.viewlets.common import ViewletBase
 from requests.exceptions import RequestException
 from zope.publisher.browser import BrowserView
 
+import base64
 import json
 import requests
 import rsa
@@ -26,12 +27,13 @@ class RichPreviewJsonView(BrowserView):
         privkey = api.portal.get_registry_record(
             'private_key', interface=IRichPreviewSettings, default='')
         try:
+            url = base64.b64decode(url)
             privkey = rsa.PrivateKey.load_pkcs1(privkey)
             self.url = rsa.decrypt(url, privkey)
         except rsa.pkcs1.DecryptionError:
-            msg = 'URL decription failed: {0} ({1})'.format(self.context, url)
+            msg = 'URL decryption failed: {0} ({1})'.format(self.context, url)
             logger.warn(msg)
-        except ValueError:
+        except (TypeError, ValueError):
             pass
 
     def get_meta_property(self, name):

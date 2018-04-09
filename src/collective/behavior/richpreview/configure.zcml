@@ -21,4 +21,11 @@
   <include file="behaviors.zcml" />
   <include file="profiles.zcml" />
 
+  <adapter
+      for="* collective.behavior.richpreview.interfaces.IBrowserLayer"
+      name="collective.behavior.richpreview"
+      factory=".transform.RichPreviewTransform"
+      />
+
+
 </configure>
