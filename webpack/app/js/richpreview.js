@@ -50,13 +50,15 @@ export default class RichPreview {
     if (this.loading || content.innerHTML.trim() !== this.loadingMessage) {
       return;
     }
+    
+    let $a = $(tip.reference);
 
     this.loading = true
 
     $.ajax({
       url: portal_url + '/@@richpreview-json-view',
       data: {
-        url: tip.reference.href
+        url: $a.attr('data-richpreview')
       },
       context: this
     }).done(function(data) {

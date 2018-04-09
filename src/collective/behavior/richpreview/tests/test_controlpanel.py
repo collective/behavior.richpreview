@@ -60,6 +60,14 @@ class RegistryTestCase(unittest.TestCase):
         self.assertTrue(hasattr(self.settings, 'enable'))
         self.assertEqual(self.settings.enable, True)
 
+    def test_public_key_in_registry(self):
+        self.assertTrue(hasattr(self.settings, 'public_key'))
+        self.assertIsNotNone(self.settings.public_key)
+
+    def test_private_key_in_registry(self):
+        self.assertTrue(hasattr(self.settings, 'private_key'))
+        self.assertIsNotNone(self.settings.private_key)
+
     def test_records_removed_on_uninstall(self):
         qi = self.portal['portal_quickinstaller']
         with api.env.adopt_roles(['Manager']):
@@ -67,6 +75,8 @@ class RegistryTestCase(unittest.TestCase):
 
         records = [
             IRichPreviewSettings.__identifier__ + '.enable',
+            IRichPreviewSettings.__identifier__ + '.public_key',
+            IRichPreviewSettings.__identifier__ + '.private_key',
         ]
 
         for r in records:

@@ -50,6 +50,7 @@ setup(
         'Products.CMFPlone >=4.3',
         'Products.GenericSetup',
         'requests',
+        'rsa',
         'setuptools',
         'zope.i18nmessageid',
         'zope.interface',

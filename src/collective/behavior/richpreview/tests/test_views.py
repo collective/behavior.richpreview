@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collective.behavior.richpreview.interfaces import IRichPreviewSettings
 from collective.behavior.richpreview.testing import INTEGRATION_TESTING
 from plone import api
 
@@ -16,15 +17,24 @@ class RichPreviewJsonViewTestCase(unittest.TestCase):
         self.view = api.content.get_view(
             u'richpreview-json-view', self.portal, self.request)
 
+    def _encrypt(self, value):
+        import base64
+        import rsa
+        pubkey = api.portal.get_registry_record(
+            'public_key', interface=IRichPreviewSettings)
+        pubkey = rsa.PublicKey.load_pkcs1(pubkey)
+        value = rsa.encrypt(value, pubkey)
+        return base64.b64encode(value)
+
     def test_view_no_url(self):
-        self.view.setup()
         response = self.view()
         self.assertEqual(response, '')
         self.assertEqual(self.request.RESPONSE.getStatus(), 400)
 
     def test_view(self):
-        self.request.form['url'] = 'http://www.plone.org'
-        self.view.setup()
+        url = u'http://www.plone.org'.encode('utf-8')
+        self.request.form['url'] = self._encrypt(url)
+
         expected = {
             'image': 'https://plone.org/logo.png',
             'description': '',

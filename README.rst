@@ -59,6 +59,19 @@ Usage
 
 TBD.
 
+How Does It Work?
+-----------------
+
+For every ``<a>`` tag in the content area of a page,
+we fetch the remote URL (the one referred in the ``src`` attribute) and parse it searching for `Open Graph <http://ogp.me/>`_ metadata describing it.
+We do this in Python with a helper browser view,
+as is not possible in JavaScript because of the `CORS <https://en.wikipedia.org/wiki/Cross-origin_resource_sharing>`_ mechanism.
+We accept only encrypted URLs to avoid misuse of this browser view.
+
+We encrypt URLs in a transform using `public-key cryptography <https://en.wikipedia.org/wiki/Public-key_cryptography>`_.
+A pair of cryptographic keys is generated automatically on package installation.
+These keys are only available to Administrators in the control panel configlet.
+
 Development
 -----------
 
