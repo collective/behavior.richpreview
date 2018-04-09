@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from App.Common import rfc1123_date
 from collective.behavior.richpreview.behaviors import IRichPreview
 from collective.behavior.richpreview.interfaces import IRichPreviewSettings
 from collective.behavior.richpreview.logger import logger
@@ -6,9 +7,11 @@ from lxml import etree
 from plone import api
 from plone.app.layout.viewlets.common import ViewletBase
 from requests.exceptions import RequestException
+from time import time
 from zope.interface import implementer
 from zope.publisher.browser import BrowserView
 from zope.publisher.interfaces import IPublishTraverse
+from zope.publisher.interfaces import NotFound
 
 import base64
 import json
@@ -17,6 +20,7 @@ import rsa
 
 
 TIMEOUT = 5
+TTL = 60 * 60 * 24 * 7  # one week in seconds
 
 
 @implementer(IPublishTraverse)
@@ -61,8 +65,13 @@ class RichPreviewJsonView(BrowserView):
             self.request.RESPONSE.setStatus(400)
             return ''
 
+        # the Expires header will help us control how often clients
+        # will ask for a page metadata
+        expires = rfc1123_date(time() + TTL)
         response = self.request.RESPONSE
         response.setHeader('Content-Type', 'application/json')
+        response.setHeader('Cache-Control', 'public')
+        response.setHeader('Expires', expires)  # cache the response for one week
         return response.setBody(json.dumps(self.extract_data()))
 
     def publishTraverse(self, request, url):
@@ -77,7 +86,7 @@ class RichPreviewJsonView(BrowserView):
             msg = 'URL decryption failed: {0} ({1})'.format(self.context, url)
             logger.warn(msg)
         except (TypeError, ValueError):
-            pass
+            raise NotFound(self, url)
         return self
 
 
