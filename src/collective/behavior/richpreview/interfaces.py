@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from collective.behavior.richpreview import _
+from collective.behavior.richpreview.utils import validate_key_pair
+from collective.behavior.richpreview.utils import validate_private_key
+from collective.behavior.richpreview.utils import validate_public_key
 from plone.autoform import directives as form
 from zope import schema
 from zope.interface import Interface
+from zope.interface import invariant
 
 
 class IBrowserLayer(Interface):
@@ -24,6 +28,7 @@ class IRichPreviewSettings(Interface):
         title=_(u'Public Key'),
         description=_(
             u'Used to encrypt the URL.'),
+        constraint=validate_public_key,
     )
 
     form.widget('private_key', rows=15)
@@ -31,6 +36,7 @@ class IRichPreviewSettings(Interface):
         title=_(u'Private Key'),
         description=_(
             u'Used to decrypt the URL. Never share this key with anyone.'),
+        constraint=validate_private_key,
     )
 
     # keys are available to Administrators only
@@ -38,3 +44,7 @@ class IRichPreviewSettings(Interface):
         public_key='cmf.ManagePortal', private_key='cmf.ManagePortal')
     form.write_permission(
         public_key='cmf.ManagePortal', private_key='cmf.ManagePortal')
+
+    @invariant
+    def _validate_key_pair(data):
+        validate_key_pair(data)
