@@ -31,7 +31,7 @@ class TransformerTestCase(unittest.TestCase):
     def _decrypt(self, value):
         import base64
         import rsa
-        value = base64.b64decode(value)
+        value = base64.urlsafe_b64decode(value)
         privkey = api.portal.get_registry_record(
             'private_key', interface=IRichPreviewSettings)
         privkey = rsa.PrivateKey.load_pkcs1(privkey)

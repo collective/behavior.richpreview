@@ -70,7 +70,7 @@ class RichPreviewJsonView(BrowserView):
         privkey = api.portal.get_registry_record(
             'private_key', interface=IRichPreviewSettings, default='')
         try:
-            url = base64.b64decode(url)
+            url = base64.urlsafe_b64decode(url)
             privkey = rsa.PrivateKey.load_pkcs1(privkey)
             self.url = rsa.decrypt(url, privkey)
         except rsa.pkcs1.DecryptionError:

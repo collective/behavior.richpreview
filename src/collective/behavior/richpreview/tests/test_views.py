@@ -24,7 +24,7 @@ class RichPreviewJsonViewTestCase(unittest.TestCase):
             'public_key', interface=IRichPreviewSettings)
         pubkey = rsa.PublicKey.load_pkcs1(pubkey)
         value = rsa.encrypt(value, pubkey)
-        return base64.b64encode(value)
+        return base64.urlsafe_b64encode(value)
 
     def test_view_no_url(self):
         self.view.publishTraverse(self.request, '')
