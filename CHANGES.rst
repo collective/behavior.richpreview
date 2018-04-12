@@ -4,6 +4,9 @@ Changelog
 1.0a2 (unreleased)
 ------------------
 
+- Fix javascript when data is not loaded correctly.
+  [rodfersou]
+
 - Use traversal instead of a query parameter;
   this allows the response to be cached on intermediate servers.
   [rodfersou, hvelarde]
