@@ -47,7 +47,7 @@ export default class RichPreview {
 
     const content = tip.popper.querySelector('.tippy-content');
 
-    if (this.loading || content.innerHTML.trim() !== this.loadingMessage) {
+    if (this.loading || (content.innerHTML || '').trim() !== this.loadingMessage) {
       return;
     }
     
